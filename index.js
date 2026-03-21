@@ -1,20 +1,40 @@
 import express, { response } from "express";
 import jobs from "./jobs.json" with { type: "json" };
-import { DEFAULTS } from "./conifg.js";
+import { DEFAULTS } from "./config.js";
 const PORT = process.env.PORT || 1234;
 const app = express();
 
 const filter = (request, response, jobs) => {
-  const { technology } = request.query;
+  const {
+    technology = "",
+    limit = DEFAULTS.limit,
+    offset = DEFAULTS.offset,
+    text = "",
+  } = request.query;
 
-  if (technology) {
-    const jobsFiltered = jobs.filter((job) =>
-      job.data.technology.includes(technology),
-    );
-    return jobsFiltered;
-  }
+  const limitNumber = Number(limit);
+  const offsetNumber = Number(offset);
 
-  return jobs;
+  const jobsFiltered =
+    technology !== ""
+      ? jobs.filter((job) =>
+          job.data.technology.toLowerCase().includes(technology.toLowerCase()),
+        )
+      : jobs;
+  const jobsFilterWhitText =
+    text !== ""
+      ? jobsFiltered.filter(
+          (job) =>
+            job.titulo.toLowerCase().includes(text.toLowerCase()) ||
+            job.descripcion.toLowerCase().includes(text.toLowerCase()),
+        )
+      : jobsFiltered;
+
+  const jobsRecorted = jobsFilterWhitText.slice(
+    offsetNumber,
+    offsetNumber + limitNumber,
+  );
+  return jobsRecorted;
 };
 
 app.get("/", (request, response) => {
@@ -30,16 +50,7 @@ app.get("/health", (request, response) => {
 
 app.get("/jobs", async (request, response) => {
   // const jobs = await import("./jobs.json", { with: { type: "json" } });
-  const { limit = DEFAULTS.limit, offset = DEFAULTS.offset } = request.query;
-
-  const limitNumber = Number(limit);
-  const offsetNumber = Number(offset);
-
-  const jobsFiltered = filter(request, response, jobs);
-  const jobsRecorted = jobsFiltered.slice(
-    offsetNumber,
-    offsetNumber + limitNumber,
-  );
+  const jobsRecorted = filter(request, response, jobs);
   return response.json(jobsRecorted);
 });
 
