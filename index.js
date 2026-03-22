@@ -3,10 +3,12 @@ import jobs from "./jobs.json" with { type: "json" };
 import { DEFAULTS } from "./config.js";
 const PORT = process.env.PORT || 1234;
 const app = express();
-
+app.use(express.json());
 const filter = (request, response, jobs) => {
   const {
     technology = "",
+    modalidad = "",
+    nivel = "",
     limit = DEFAULTS.limit,
     offset = DEFAULTS.offset,
     text = "",
@@ -15,12 +17,27 @@ const filter = (request, response, jobs) => {
   const limitNumber = Number(limit);
   const offsetNumber = Number(offset);
 
-  const jobsFiltered =
-    technology !== ""
-      ? jobs.filter((job) =>
-          job.data.technology.toLowerCase().includes(technology.toLowerCase()),
-        )
-      : jobs;
+  let jobsFiltered = jobs;
+
+  if (technology !== "") {
+    jobsFiltered = jobsFiltered.filter((job) =>
+      job.data.technology.some((tech) =>
+        tech.toLowerCase().includes(technology.toLowerCase()),
+      ),
+    );
+  }
+
+  if (modalidad !== "") {
+    jobsFiltered = jobsFiltered.filter((job) =>
+      job.data.modalidad.toLowerCase().includes(modalidad.toLowerCase()),
+    );
+  }
+
+  if (nivel !== "") {
+    jobsFiltered = jobsFiltered.filter((job) =>
+      job.data.nivel.toLowerCase().includes(nivel.toLowerCase()),
+    );
+  }
   const jobsFilterWhitText =
     text !== ""
       ? jobsFiltered.filter(
@@ -52,6 +69,30 @@ app.get("/jobs", async (request, response) => {
   // const jobs = await import("./jobs.json", { with: { type: "json" } });
   const jobsRecorted = filter(request, response, jobs);
   return response.json(jobsRecorted);
+});
+app.delete("/jobs/:id", async (request, response) => {
+  const { id } = request.params;
+  const jobIndex = jobs.findIndex((job) => job.id === id);
+  if (jobIndex === -1) {
+    return response.status(404).json({ error: "Job not found" });
+  }
+  const deletedJob = jobs.splice(jobIndex, 1);
+  return response.json(deletedJob[0]);
+});
+
+app.post("/jobs", async (request, response) => {
+  const { titulo, empresa, ubicacion, descripcion, data, content } =
+    request.body;
+  const newJob = {
+    id: crypto.randomUUID(),
+    titulo,
+    empresa,
+    ubicacion,
+    descripcion,
+    data,
+    content,
+  };
+  return response.status(201).json(newJob);
 });
 
 app.get("/jobs/:id", async (request, response) => {
