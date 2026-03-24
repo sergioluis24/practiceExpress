@@ -26,7 +26,7 @@ export class JobCrontroller {
       text = "",
     } = request.query;
 
-    const jobsRecorted = await JobModel.getAll({
+    const { jobs, jobsRecorted } = await JobModel.getAll({
       technology,
       modalidad,
       nivel,

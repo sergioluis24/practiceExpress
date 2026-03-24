@@ -71,7 +71,7 @@ export class JobModel {
       offset,
       text,
     });
-    return jobsRecorted;
+    return { jobs, jobsRecorted };
   }
   static async getById({ id }) {
     const jobUnique = jobs.filter((job) => job.id === id);
@@ -79,12 +79,12 @@ export class JobModel {
   }
   static async updateJob({ id, updatedJob }) {
     const jobIndex = jobs.findIndex((job) => job.id === id);
-    if (jobIndex !== -1) {
-      jobs[jobIndex] = {
-        id: id,
-        ...updatedJob,
-      };
-    }
+
+    jobs[jobIndex] = {
+      id: id,
+      ...updatedJob,
+    };
+    return jobs[jobIndex];
   }
   static async deleteJob({ id }) {
     const deletedJob = jobs.splice(jobIndex, 1);
