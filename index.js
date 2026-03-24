@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import jobs from "./jobs.json" with { type: "json" };
 import { DEFAULTS } from "./config.js";
 import cors from "cors";
