@@ -1,4 +1,4 @@
-import { JobModel } from "../models/job";
+import { JobModel } from "../models/job.js";
 import { DEFAULTS } from "../config.js";
 
 export class JobController {

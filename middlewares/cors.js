@@ -12,6 +12,6 @@ const CORS_OPTIONS = {
   },
 };
 
-export default midleWarecors = ({ corsOptions = CORS_OPTIONS } = {}) => {
+export default ({ corsOptions = CORS_OPTIONS } = {}) => {
   return cors(corsOptions);
 };
