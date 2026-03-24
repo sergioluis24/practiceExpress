@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { JobCrontroller } from "../controllers/jobs";
+import { JobController } from "../controllers/jobs";
 
 const jobsRouter = Router();
 
-jobsRouter.post("/", JobCrontroller.addJob);
+jobsRouter.post("/", JobController.addJob);
 jobsRouter.get("/health", (request, response) => {
   return response.send({
     status: "ok",
@@ -11,9 +11,9 @@ jobsRouter.get("/health", (request, response) => {
   });
 });
 
-jobsRouter.get("/", JobCrontroller.getAll);
-jobsRouter.get("/:id", JobCrontroller.getById);
+jobsRouter.get("/", JobController.getAll);
+jobsRouter.get("/:id", JobController.getById);
 
-jobsRouter.put("/:id", JobCrontroller.updateJob);
+jobsRouter.put("/:id", JobController.updateJob);
 
-jobsRouter.delete("/:id", JobCrontroller.deleteJob);
+jobsRouter.delete("/:id", JobController.deleteJob);

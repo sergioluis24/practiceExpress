@@ -1,7 +1,7 @@
 import { JobModel } from "../models/job";
 import { DEFAULTS } from "../config.js";
 
-export class JobCrontroller {
+export class JobController {
   static async addJob(request, response) {
     const { titulo, empresa, ubicacion, descripcion, data, content } =
       request.body;
