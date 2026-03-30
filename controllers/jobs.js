@@ -1,10 +1,11 @@
 import { JobModel } from "../models/job.js";
 import { DEFAULTS } from "../config.js";
-
+import { validateJobsPartial, validateJobs } from "../schemes/jobs.js";
 export class JobController {
   static async addJob(request, response) {
     const { titulo, empresa, ubicacion, descripcion, data, content } =
       request.body;
+
     const newJob = await JobModel.addJob({
       titulo,
       empresa,
@@ -49,6 +50,7 @@ export class JobController {
   }
   static async updateJob(request, response) {
     const { id } = request.params;
+
     const jobIndex = await JobModel.verifyJob({ id });
     if (jobIndex === -1) {
       return response.status(404).json({ error: "Job not found" });
