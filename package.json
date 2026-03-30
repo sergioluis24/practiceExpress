@@ -13,6 +13,10 @@
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
+<<<<<<< HEAD
     "zod": "^4.3.6"
+=======
+    "vercel": "^50.37.0"
+>>>>>>> 5b562f72ac7c5e376ca579e5e4d00abcfef87ac9
   }
 }
