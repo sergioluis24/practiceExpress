@@ -2,6 +2,7 @@ import express from "express";
 import jobs from "./jobs.json" with { type: "json" };
 import { DEFAULTS } from "./config.js";
 import cors from "cors";
+import crypto from "crypto";
 const PORT = process.env.PORT || 1234;
 const app = express();
 app.use(express.json());

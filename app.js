@@ -1,6 +1,8 @@
 import express from "express";
 import jobsRouter from "./routes/jobs.js";
-import jobs from "./jobs.json" with { type: "json" };
+import aiRouter from "./routes/ai.js";
+import fs from "fs";
+const jobs = JSON.parse(fs.readFileSync(new URL("./jobs.json", import.meta.url), "utf8"));
 import middlewareCors from "./middlewares/cors.js";
 import { DEFAULTS } from "./config.js";
 const PORT = process.env.PORT || 1234;
@@ -16,6 +18,7 @@ app.get("/health", (request, response) => {
 // CORS
 app.use(middlewareCors());
 app.use("/jobs", jobsRouter);
+app.use("/summary", aiRouter);
 if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
     console.log(`Escuchando en el puerto http://localhost:${PORT}`);

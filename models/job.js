@@ -1,5 +1,6 @@
 import crypto from "crypto";
-import jobs from "../jobs.json" with { type: "json" };
+import fs from "fs";
+const jobs = JSON.parse(fs.readFileSync(new URL("../jobs.json", import.meta.url), "utf8"));
 
 export class JobModel {
   static async addJob({
